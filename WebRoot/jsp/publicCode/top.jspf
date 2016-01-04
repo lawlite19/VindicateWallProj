@@ -1,0 +1,274 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript">
+$(function(){
+	$("#subLogin").click(function(){
+		var $btn=$(this).button('loading');
+		$.ajax({
+			url : "checkUserName!loginIsTrue.action",
+			type : "post",
+			dataType : "json",
+			data : {
+				userName : $("#userNameLogin").val(),
+				password : $("#passwordLogin").val()
+			},
+			success : function(data) {
+				var json = eval("(" + data + ")");
+				var str = json.name;
+				if(str=="UNameFalse"){
+					$("#spanValidateLogin").html("用户名不存在！").css(
+							"color", "red").css('display', '');
+					$("#userNameLogin").focus();
+					$btn.button('reset');
+					return;
+				}
+				if(str=="PwdFalse"){
+					$("#spanValidateLogin").html("密码错误！").css(
+							"color", "red").css('display', '');
+					$("#passwordLogin").focus();
+					$btn.button('reset');
+					return;
+				}
+				
+				$("#formId0").submit();	
+			},
+			error : function() {
+				Dialog("服务器出现异常", 0);
+			}
+		});
+	});
+	});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	    /*签到模块日期捕捉：*/
+        var week = function(){
+            var objDate= new Date();
+            var week = objDate.getDay();
+            switch(week)
+            {
+                    case 0:
+                    week="周日";
+                    break;
+                    case 1:
+                    week="周一";
+                    break;
+                    case 2:
+                    week="周二";
+                    break;
+                    case 3:
+                    week="周三";
+                    break;
+                    case 4:
+                    week="周四";
+                    break;
+                    case 5:
+                    week="周五";
+                    break;
+                    case 6:
+                    week="周六";
+                    break;
+            }
+            $("#sing_for_number").html( week );
+        };
+            
+        week();
+        //打卡
+        $('.singer_r_img').click(function() {
+            var that = $(this);
+            that.unbind();
+            that.attr("class", "singer_r_img_loading");
+            $.getJSON("checkUserName!signAttend.action", function(data) {
+            	var json = eval("(" + data + ")");
+                if(json.name == "200") {
+                    //alert(1);
+                    //var tip = $('.signger-tip');
+                    //var d = tip.find('.yellow');
+                    //var s = tip.find('.blue');
+                    //d.text(data.day);
+                    //s.text(data.score);
+                    //that.addClass("current");
+                    that.attr("class", "singer_r_img_attend");
+                    //that.attr("data-toggle","tooltip");
+                    //that.attr("data-placement","bottom");
+                    //that.attr("title","已签到");
+                    showTip('签到成功！经验 + 20',null,1);
+                    that.unbind();
+                }
+                else{
+                	Dialog("服务器出现异常！",0);
+                }
+            });
+        });
+});
+</script>
+	<nav class="navbar navbar-inverse  navbar-fixed-top">
+      <div class="container">
+        <!-- 折叠导航 -->
+        <div class="navbar-header">
+          <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only Toggle navigation"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="${pageContext.request.contextPath}/jsp/userAction/releaseInfo.action">
+            <img src='${pageContext.request.contextPath}/style/images/logo4.jpg' class="logo" alt="BraveToLove" />
+          </a>
+        </div>
+
+        <!-- 展开导航 -->
+        <div class="navbar-collapse collapse" role="navigation" aria-expanded="true">
+          <ul class="nav navbar-nav">
+            <li><a href="${pageContext.request.contextPath}/jsp/userAction/releaseInfo.action">首页</a></li>
+            <!--  <li><a href="#">论坛</a></li>-->
+            <!--<li><a href="#" target="_blank">表白攻略</a></li> -->
+            <li>
+            	<a href="dailyVin!toDailyVinUI.action">浪漫专区</a>
+            </li>
+            <li>
+            	<a href="${pageContext.request.contextPath}/jsp/userAction/intelligentWall.jsp">智能小美</a>
+            </li>
+            <c:if test="${user!=null}">
+            <li>
+            <a href="mlogin!toVindicateUI.action">发表表白</a>
+            </li>
+            </c:if>
+            
+            <c:if test="${user==null}">
+            <li>
+            	<a data-toggle="modal" href="#noteModels">发表表白</a>
+            </li>            
+            </c:if>
+           </ul>
+
+           
+	<c:if test="${user==null}">
+    	<ul class="login fr" id="ulLogin">
+			<li>
+			<button  type="button" class="btnLogin" data-toggle="modal" data-target="#myModal">登录
+			</button></li>
+			<li class="reg"><a href="register.jsp">注册</a></li>
+		</ul>
+	</c:if>
+	<c:if test="${user!=null}">
+		<ul class="nav navbar-nav navbar-right hidden-sm">
+		    <li id="liUserCenterAlert">
+                <a href="releaseInfo!msgHandle.action">
+                    <i class="glyphicon glyphicon-bell"></i>
+                    <span class="badge badge-alert"><c:if test="${(totalMsgCount-user.msgCount)<=0}"></c:if><c:if test="${(totalMsgCount-user.msgCount)>0}">${totalMsgCount-user.msgCount}</c:if></span>
+                </a>
+            </li>
+            <li style="margin-top:8px;">
+            	<a href="#">
+           		 <img data-toggle="tooltip" data-placement="bottom" title="等级<b style='color:red'>Lv${user.userLevel}</b>
+           		 	<c:if test="${attendInfo!=null}">
+           		 		<br/><span>签到<b style='color:yellow'>${attendInfo.attendCount}</b>天,</span><span>获得<b style='color:yellow'>${attendInfo.score}</b>积分</span>
+           		 	</c:if>"
+           		 	 src="${pageContext.request.contextPath}/style/images/userLevel/${user.userLevel}.gif"/>
+           		</a>
+            </li>
+			<li class="liUserName">
+				<a href="mlogin!enterPersonalInfo.action">
+				<c:if test="${user.userLevel<5}">
+				<span class="bar-nc">${user.userName}</span></c:if>
+				<c:if test="${user.userLevel>=5}">
+				<span class="bar-nd">${user.userName}</span></c:if>
+					<img id="avatar" src="${pageContext.request.contextPath}/style/images/small.gif" class="tx"/>
+				</a>
+			</li>
+			<li class="liQuit">
+				<a href="mlogin!logout.action">退出</a>
+			</li>
+			<!--二维码 <li class="liQuit">
+				<i class="glyphicon glyphicon-qrcode"></i>
+			</li> -->
+			<c:if test="${attendInfo==null}">
+			<li style="width:90px;height:50px;">
+				<div class="singer_r_img">
+					<span id="sing_for_number"></span>
+				</div>				
+			</li>
+			</c:if>
+			<c:if test="${attendInfo!=null}">
+			<li style="width:90px;height:50px;">
+				<div class="singer_r_img_attend">
+					<span id="sing_for_number" data-toggle="tooltip" data-placement="bottom" title="已签到"></span>
+				</div>				
+			</li>	
+			</c:if>  
+		</ul>
+	</c:if>
+        </div>
+      </div>
+    </nav>
+    <!-- 弹出提示的模态框开始 -->
+<!-- Modal -->
+<div class="modal fade" id="noteModels" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">提示</h4>
+      </div>
+      <div class="modal-body">
+			亲，只有登录之后才能发布表白哦！
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+   <!-- 登录弹出的模态框 -->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">用户登录</h4>
+      </div>
+      <div class="loginmodal-body">
+  <form class="form-horizontal" action="mlogin!login.action" method="post" id="formId0">
+    <div class="form-group">
+    <label for="" class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+     <span id="spanValidateLogin"></span>
+    </div>
+  </div>
+  <div class="form-group">
+    
+    <label for="userName" class="col-sm-2 control-label">用户名</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="user.userName" id="userNameLogin" placeholder="用户名" required="required"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password" class="col-sm-2 control-label">密码</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" name="user.password" id="passwordLogin" placeholder="密码" required="required"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+
+      <button type="button" class="btn btn-default btn-success btn-lg" data-loading-text="登录中..." autocomplete="off" id="subLogin">登录</button>
+      &nbsp;&nbsp;<span><a href="register.jsp">注册</a></span>
+      &nbsp;&nbsp;<span><a href="findMyPasswordOne.jsp">找回密码</a></span>
+    </div>
+  </div>
+</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 弹出登录对话框结束 -->

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<!-- 配置为开发模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+
+    <!-- 把主题配置为simple -->
+    <constant name="struts.ui.theme" value="simple" />
+    
+    
+	<constant name="struts.objectFactory" value="spring"></constant>
+	<constant name="struts.il8n.encoding" value="GBK"></constant>
+	
+	<!-- 配置ajax验证用户名等 -->
+	<package name="ajax" extends="json-default" namespace="/jsp/userAction">
+		<action name="checkUserName" class="checkUNameAction" >
+		<!-- 返回类型为json 在sjon-default中定义 -->  
+			<result type="json">
+				<!-- root的值对应要返回的值的属性 -->  
+				<!-- 这里的result值即是 对应action中的 result -->  
+				<param name="root">result</param>
+			</result>
+		</action>
+		<action name="intelligent" class="intelligentAction" >
+		<!-- 返回类型为json 在sjon-default中定义 -->  
+			<result type="json">
+				<!-- root的值对应要返回的值的属性 -->  
+				<!-- 这里的result值即是 对应action中的 result -->  
+				<param name="root">result</param>
+			</result>
+		</action>
+	</package>
+	<package name="m" extends="struts-default" namespace="/jsp/userAction">
+		<interceptors>
+    		<!-- 声明拦截器 -->
+    		<interceptor name="checkIsLogin" class="com.hhit.util.CheckIsLoginInterceptor"></interceptor>
+    		
+    		<!-- 重新定义默认的拦截器栈 -->
+    		<interceptor-stack name="defaultStack">
+    			<interceptor-ref name="checkIsLogin"></interceptor-ref>
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    		</interceptor-stack>
+    	</interceptors>
+
+		<!-- 全局的Result配置 -->
+		<global-results>
+			<result name="input" type="redirectAction">releaseInfo</result>
+		</global-results>
+		
+		
+		<!-- 登录 -->
+		<action name="mlogin" class="loginAction">
+			<result name="success" type="redirectAction">releaseInfo</result>
+			<result name="registerSuccess">/jsp/userAction/registerSuccess.jsp</result>
+			<result name="findPasswordTwo">/jsp/userAction/findMyPasswordTwo.jsp</result>
+			<result name="findPasswordTwoError">/jsp/userAction/findMyPasswordOne.jsp</result>
+			<result name="updatePassword">/jsp/userAction/pwdChangeSuccess.jsp</result>
+			<result name="enterPersonalInfo">/jsp/userAction/personalInfoIndex.jsp</result>
+			<result name="logout" type="redirectAction">releaseInfo</result>
+			<result name="toVindicateUI">/jsp/userAction/vindicate.jsp</result>
+		</action>
+		<!-- 产生验证码 -->
+		<action name="rand" class="randomAction">
+			<result type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="releaseInfo" class="queryReleaseInfoAction">
+			<result name="success">/jsp/userAction/main.jsp</result>
+			<result name="queryMyVindication">/jsp/userAction/myVindication.jsp</result>
+			<result name="toMainUI" type="redirectAction">releaseInfo</result>
+			<result name="toMyMessageUI">/jsp/userAction/myMessage.jsp</result>
+		</action>
+		<action name="manageUserInfo" class="managePersonalInfoAction">
+			<result name="savaUserInfo">/jsp/userAction/personalInfoIndex.jsp</result>
+			<result name="updatePassword">/jsp/userAction/pwdChangeSuccess.jsp</result>
+		</action>
+		<action name="replay" class="replayAction">
+			<result name="toReplayUI">/jsp/userAction/replay.jsp</result>
+			<result name="deleteReleaseSuccess" type="redirectAction">releaseInfo</result>
+		</action>
+		<action name="problem" class="problemAction">
+			<result name="toMainUI" type="redirectAction">releaseInfo</result>
+		</action>
+		<action name="dailyVin" class="dailyVinAction">
+			<result name="toDailyVinUI">/jsp/userAction/dailyVindicate.jsp</result>
+		</action>
+	</package>
+	
+	
+	<!-- 管理界面开始 -->
+	<package name="n" namespace="/" extends="struts-default">
+	<interceptors>
+    		<!-- 声明拦截器 -->
+    		<interceptor name="checkAdminIsLogin" class="com.hhit.util.CheckAdminIsLoginInterceptor"></interceptor>
+    		
+    		<!-- 重新定义默认的拦截器栈 -->
+    		<interceptor-stack name="defaultStack">
+    			<interceptor-ref name="checkAdminIsLogin"></interceptor-ref>
+    			<interceptor-ref name="defaultStack"></interceptor-ref>
+    		</interceptor-stack>
+    	</interceptors>
+		<!-- 全局的Result配置 -->
+		<global-results>
+			<result name="loginUI">/jsp/adminAction/userAction/loginUI.jsp</result>
+			<result name="noPrivilegeError">/viewError.jsp</result>
+		</global-results>
+			<!-- 用户管理 -->
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="list">/jsp/adminAction/userAction/list.jsp</result>
+			<result name="saveUI">/jsp/adminAction/userAction/saveUI.jsp</result>
+			<result name="toList" type="redirectAction">user_list</result>
+			
+			<result name="logout">/jsp/adminAction/userAction/logout.jsp</result>
+			<result name="toIndex" type="redirect">adminIndex.jsp</result>
+		</action>
+					<!-- 表白管理 -->
+		<action name="vindicate_*" class="vindicateAction" method="{1}">
+			<result name="list">/jsp/adminAction/vindicateAction/list.jsp</result>
+			<result name="toList" type="redirectAction">vindicate_list</result>
+			<result name="toBackgroundUI">/jsp/adminAction/vindicateAction/setBackImage.jsp</result>
+		</action>
+					<!-- 回复管理 -->
+		<action name="adminReplay_*" class="adminReplayAction" method="{1}">
+			<result name="list">/jsp/adminAction/replayAction/list.jsp</result>
+			<result name="toList" type="redirectAction">adminReplay_list</result>
+		</action>
+			<!-- 首页 -->
+		<action name="home_*" class="homeAction" method="{1}">
+			<result name="{1}">/jsp/adminAction/homeAction/{1}.jsp</result>
+		</action>
+					<!-- 后台用户管理 -->
+		<action name="manageUser_*" class="manageUserAction" method="{1}">
+			<result name="list">/jsp/adminAction/manageUserAction/list.jsp</result>
+			<result name="toList" type="redirectAction">manageUser_list</result>
+			<result name="toModifyPwdUI">/jsp/adminAction/manageUserAction/modifyPwd.jsp</result>
+			<result name="toAddUI">/jsp/adminAction/manageUserAction/addUI.jsp</result>
+		</action>
+							<!-- 后台网站问题管理 -->
+		<action name="adminProblem_*" class="adminProblemAction" method="{1}">
+			<result name="list">/jsp/adminAction/problemAction/list.jsp</result>
+			<result name="toList" type="redirectAction">adminProblem_list</result>
+		</action>
+									<!-- 后台网站系统消息管理 -->
+		<action name="sysInfo_*" class="systemInfoAction" method="{1}">
+			<result name="list">/jsp/adminAction/systemInfoAction/list.jsp</result>
+			<result name="toList" type="redirectAction">sysInfo_list</result>
+			<result name="toAddUI">/jsp/adminAction/systemInfoAction/addUI.jsp</result>
+		</action>
+									<!-- 后台网站角色管理 -->
+		<action name="role_*" class="roleAction" method="{1}">
+			<result name="list">/jsp/adminAction/roleAction/list.jsp</result>
+			<result name="saveUI">/jsp/adminAction/roleAction/saveUI.jsp</result>
+			<result name="setPrivilegeUI">/jsp/adminAction/roleAction/setPrivilegeUI.jsp</result>
+			<result name="toList" type="redirectAction">role_list</result>
+		</action>
+											<!-- 后台网站每日表白管理 -->
+		<action name="adminDailyVin_*" class="adminDailyVinAction" method="{1}">
+			<result name="list">/jsp/adminAction/dailyVinAction/list.jsp</result>
+			<result name="saveUI">/jsp/adminAction/dailyVinAction/saveUI.jsp</result>
+			<result name="toList" type="redirectAction">adminDailyVin_list</result>
+		</action>
+	</package>
+</struts>    

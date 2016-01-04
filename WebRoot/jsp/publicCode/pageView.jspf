@@ -1,0 +1,70 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+
+<!-- 页码开始 -->
+    <div class="container">
+    	<div class="row">
+  			<div class="col-sm-3">
+
+			</div>
+  			<div class="col-sm-2"></div>
+  			<div class="col-sm-7">
+<nav>
+  <ul class="pagination pagination-lg">
+    <li>
+      <a href="javascript: gotoPage(1)" title="首页" style="cursor: hand;" aria-label="Previous">
+        <span aria-hidden="true">首页</span>
+      </a>
+    </li>
+    
+    	<c:forEach begin="${page.beginPageIndex}" end="${page.endPageIndex}" var="num">
+			
+			<c:if test="${num == page.currentPage}"><%-- 当前页 --%>
+				<li class="active">
+					<span class="as">${num}</span>
+				</li>
+			</c:if>
+			<c:if test="${num != page.currentPage}"><%-- 非当前页 --%>
+			<li>
+				<a href="javascript:gotoPage(${num});" style="cursor: hand;">${num}</a>	
+			</li>	
+			</c:if>
+			
+		</c:forEach>
+    	
+    
+    <li>
+      <a href="javascript: gotoPage(${page.pageCount})" title="尾页" style="cursor: hand;" aria-label="Next">
+        <span aria-hidden="true">尾页</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+<div class="divSpan">
+     	<span class="spanPageInfo" align="right"><!--  当前页：<span class="spanRed">${page.currentPage}</span>-->
+  				共<span class="spanRed">${page.pageCount}</span>页，
+				<!-- 每页显示：${pageSize}条  -->
+				<span class="spanRed">${page.recordCount}</span>条信息
+    	，转到：
+		<select onchange="gotoPage(this.value)" id="_pn" onscroll="true">
+			<c:forEach begin="1" end="${page.pageCount}" var="num">
+				<option value="${num}">${num}</option>
+			</c:forEach>	
+		</select>页&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</span>
+		<script type="text/javascript">
+			$("#_pn").val("${currentPage}");
+		</script>
+</div>
+  			</div>
+		</div>
+    </div>
+    <script type="text/javascript">
+		function gotoPage( pageNum ){
+			// window.location.href = "forum_show.action?id=${id}&pageNum=" + pageNum;
+			
+			$("#formId").append("<input type='hidden' id='CurrentPageNumInfo' name='pageNum' value='" + pageNum +"'>");
+			$("#formId").submit();
+		}
+</script>
+<!-- 页码结束 -->

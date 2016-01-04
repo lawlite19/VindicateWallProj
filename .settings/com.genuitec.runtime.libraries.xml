@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+  <add-on id="spring.web"/>
+  <add-on id="spring.persistence.jdbc"/>
+  <add-on id="hibernate.extra"/>
+  <add-on id="spring.j2ee_2.5"/>
+  <container path="com.genuitec.runtime.library/com.genuitec.spring_3.0">
+    <jar-attrs id="data/3.0/lib/persistCore/org.springframework.orm-3.0.5.RELEASE.jar">
+      <attribute name="javadoc_location" value="http://static.springsource.org/spring/docs/3.0.x/api/"/>
+      <attribute name="source-path-root"/>
+      <attribute name="source-path" value="C:\Users\bob\AppData\Local\MyEclipse Professional 2014\configuration\org.eclipse.osgi\bundles\105\1\.cp\data\3.0\lib\persistCore\org.springframework.orm-3.0.5.RELEASE.jar"/>
+    </jar-attrs>
+  </container>
+</project>

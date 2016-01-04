@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	   <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<!-- 导入外部配置数据库连接的文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<!-- 配置c3p0连接池 -->
+	<bean id="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<!-- 连接信息 -->
+		<property name="driverClass"
+			value="${driverClass}">
+		</property>
+		<property name="jdbcUrl"
+			value="${jdbcUrl}">
+		</property>
+		<property name="user" value="${user}"></property>
+		<property name="password" value="${password}"></property>
+		<!-- 其他配置 -->
+		
+		<!-- 初始化时获得三个连接，取值应该在minPoolSize和maxPoolSize之间。Default：3 -->
+		<property name="initialPoolSize" value="10"></property>
+		<!-- 连接池保留的最小连接数。Default：3 -->
+		<property name="minPoolSize" value="5"></property>
+		<!-- 连接池保留的最大连接数，Default：15 -->
+		<property name="maxPoolSize" value="60"></property>	
+		<!-- 当连接池中的连接耗尽时c3p0一次同时获取的连接数 Default：3 -->
+		<property name="acquireIncrement" value="5"></property>
+		<!-- 控制数据源内加载的PreparedStatements数量。如果 maxStatements与maxStatementsPerConnection均为0，则缓存被关闭。Default：0-->
+		<property name="maxStatements" value="50"></property>
+		<!-- 连接池内单个连接所拥有的最大缓存statements数。Default:0 -->
+		<property name="maxStatementsPerConnection" value="5"></property>
+		<!--每40秒检查所有连接池中的空闲连接。Default: 0 -->
+		<property name="idleConnectionTestPeriod" value="40"></property>
+		<!-- 最大空闲时间，30秒内未使用则连接被丢弃。若为0则永不丢弃。Default:0 -->
+		<property name="maxIdleTime" value="20"></property>
+		<!--连接池在获得新连接失败时重试的次数，如果小于等于0则无限重试直至连接获得成功-->
+		<property name="acquireRetryAttempts" value="25"></property>
+		<property name="acquireRetryDelay" value="1000"></property>
+		<property name="checkoutTimeout" value="3000"></property>
+		<property name="autoCommitOnClose" value="false"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.connection.release_mode">
+					after_statement
+				</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/hhit/entity/TUser.hbm.xml</value>
+				<value>com/hhit/entity/TLogininfo.hbm.xml</value>
+				<value>com/hhit/entity/TReleasecontent.hbm.xml</value>
+				<value>com/hhit/entity/TReplay.hbm.xml</value>
+				<value>com/hhit/entity/TMessage.hbm.xml</value>
+				<value>com/hhit/entity/TForbidusername.hbm.xml</value>
+				<value>com/hhit/entity/TProblem.hbm.xml</value>
+				<value>com/hhit/entity/TAttend.hbm.xml</value>
+				<value>com/hhit/entity/TDailyvindicate.hbm.xml</value>
+				
+				<value>com/hhit/entity/TbManageuser.hbm.xml</value>
+				<value>com/hhit/entity/TbManageuserRole.hbm.xml</value>
+				<value>com/hhit/entity/TbPrivilege.hbm.xml</value>
+				<value>com/hhit/entity/TbRole.hbm.xml</value>
+				<value>com/hhit/entity/TbRolePrivilege.hbm.xml</value>
+			</list>
+		</property></bean>
+	<bean id="TUserDAO" class="com.hhit.dao.TUserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TLogininfoDAO" class="com.hhit.dao.TLogininfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TReleasecontentDAO"
+		class="com.hhit.dao.TReleasecontentDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TReplayDAO" class="com.hhit.dao.TReplayDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TMessageDAO" class="com.hhit.dao.TMessageDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TForbidusernameDAO"
+		class="com.hhit.dao.TForbidusernameDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TProblemDAO" class="com.hhit.dao.TProblemDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+		<bean id="TAttendDAO" class="com.hhit.dao.TAttendDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+		<bean id="TDailyvindicateDAO"
+		class="com.hhit.dao.TDailyvindicateDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="loginService" class="com.hhit.service.LoginServiceImpl">
+		<property name="userDao" ref="TUserDAO"></property>
+		<property name="forbidDao" ref="TForbidusernameDAO"></property>
+	</bean>
+	<bean id="registService" class="com.hhit.service.RegistServiceImpl">
+		<property name="userDao" ref="TUserDAO"></property>
+	</bean>
+	<bean id="queryInfoService" class="com.hhit.service.QueryInfoServiceImpl">
+		<property name="releaseInfoDao" ref="TReleasecontentDAO"></property>
+		<property name="replayDao" ref="TReplayDAO"></property>
+	</bean>
+	<bean id="messageService" class="com.hhit.service.MessageServiceImpl">
+		<property name="messageDao" ref="TMessageDAO"></property>
+	</bean>
+	<bean id="problemServiceImpl" class="com.hhit.service.ProblemServiceImpl">
+		<property name="problemDao" ref="TProblemDAO"></property>
+	</bean>
+	<bean id="attendServiceImpl" class="com.hhit.service.AttendServiceImpl">
+		<property name="attendDao" ref="TAttendDAO"></property>
+	</bean>
+	<bean id="dailyVindicateServiceImpl" class="com.hhit.service.DailyVindicateServiceImpl">
+		<property name="dailyVinDao" ref="TDailyvindicateDAO"></property>
+	</bean>
+	<bean id="loginAction" class="com.hhit.action.LoginAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+		<property name="registService" ref="registService"></property>
+		<property name="messageService" ref="messageService"></property>
+		<property name="attendService" ref="attendServiceImpl"></property>
+	</bean>
+	<bean id="checkUNameAction" class="com.hhit.action.CheckUNameAction" scope="prototype">
+		<property name="logService" ref="loginService"></property>
+		<property name="attendService" ref="attendServiceImpl"></property>
+	</bean>
+	<bean id="randomAction" class="com.hhit.action.RandomAction" scope="prototype">
+	</bean>
+	
+	<bean id="queryReleaseInfoAction" class="com.hhit.action.QueryVindicateInfoAction" scope="prototype">
+		<property name="queryInfoService" ref="queryInfoService"></property>
+		<property name="messageService" ref="messageService"></property>
+		<property name="registerService" ref="registService"></property>
+	</bean>
+	<bean id="managePersonalInfoAction" class="com.hhit.action.PersonalInfoManageAction" scope="prototype">
+		<property name="loginService" ref="loginService"></property>
+		<property name="registService" ref="registService"></property>
+
+	</bean>
+	<bean id="replayAction" class="com.hhit.action.ReplayAction" scope="prototype">
+		<property name="queryInfoService" ref="queryInfoService"></property>
+		<property name="messageService" ref="messageService"></property>
+		<property name="vindicateService" ref="vindicateServiceImpl"></property>
+	</bean>
+	<bean id="problemAction" class="com.hhit.action.ProblemAction" scope="prototype">
+		<property name="problemService" ref="problemServiceImpl"></property>
+	</bean>
+	<bean id="dailyVinAction" class="com.hhit.action.DailyVindicateAction" scope="prototype">
+		<property name="dailyVinService" ref="dailyVindicateServiceImpl"></property>
+	</bean>
+	<bean id="intelligentAction" class="com.hhit.action.IntelligentAction"></bean>
+	
+	<!-- 管理界面开始 -->
+	<bean id="TbRoleDAO" class="com.hhit.dao.TbRoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TbManageuserRoleDAO"
+		class="com.hhit.dao.TbManageuserRoleDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TbRolePrivilegeDAO"
+		class="com.hhit.dao.TbRolePrivilegeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TbPrivilegeDAO" class="com.hhit.dao.TbPrivilegeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TbManageuserDAO"
+		class="com.hhit.dao.TbManageuserDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="userService" class="com.hhit.service.UserServiceImpl">
+		<property name="manageUserDao" ref="TbManageuserDAO"></property>
+		<property name="userDao" ref="TUserDAO"></property>
+	</bean>
+	<bean id="privilegeServiceImpl" class="com.hhit.service.PrivilegeServiceImpl">
+		<property name="privilegeDao" ref="TbPrivilegeDAO"></property>
+	</bean>
+	<bean id="vindicateServiceImpl" class="com.hhit.service.VindicateServiceImpl">
+		<property name="vindicateDao" ref="TReleasecontentDAO"></property>
+		<property name="userDao" ref="TUserDAO"></property>
+	</bean>
+	<bean id="replayServiceImpl" class="com.hhit.service.ReplayServiceImpl">
+		<property name="replayDao" ref="TReplayDAO"></property>
+	</bean>
+	<bean id="manageUserServiceImpl" class="com.hhit.service.ManageUserServiceImpl">
+		<property name="manageUserDao" ref="TbManageuserDAO"></property>
+	</bean>
+	<bean id="sysInfoServiceImpl" class="com.hhit.service.SysInfoServiceImpl">
+		<property name="messageDao" ref="TMessageDAO"></property>
+	</bean>
+	<bean id="roleServiceImpl" class="com.hhit.service.RoleServiceImpl">
+		<property name="roleDao" ref="TbRoleDAO"></property>
+	</bean>
+	<bean id="adminDailyVinServiceImpl" class="com.hhit.service.AdminDailyVinServiceImpl">
+		<property name="adminDailyVinDao" ref="TDailyvindicateDAO"></property>
+	</bean>
+	
+	<bean id="homeAction" class="com.hhit.action.HomeAction" scope="prototype"></bean>
+	<bean id="userAction" class="com.hhit.action.UserAction" scope="prototype">
+		<property name="userService" ref="userService"></property>
+	</bean>
+	<bean id="vindicateAction" class="com.hhit.action.VindicateAction" scope="prototype">
+		<property name="vindicateService" ref="vindicateServiceImpl"></property>
+	</bean>
+	<bean id="adminReplayAction" class="com.hhit.action.AdminReplayAction" scope="prototype">
+		<property name="replayService" ref="replayServiceImpl"></property>
+	</bean>
+	<bean id="manageUserAction" class="com.hhit.action.ManageUserAction" scope="prototype">
+		<property name="manageUserService" ref="manageUserServiceImpl"></property>
+	</bean>
+	<bean id="adminProblemAction" class="com.hhit.action.AdminProblemAction" scope="prototype">
+		<property name="problemService" ref="problemServiceImpl"></property>
+	</bean>
+	<bean id="systemInfoAction" class="com.hhit.action.SystemInfoAction" scope="prototype">
+		<property name="sysInfoService" ref="sysInfoServiceImpl"></property>
+	</bean>
+	<bean id="roleAction" class="com.hhit.action.RoleAction" scope="prototype">
+		<property name="roleService" ref="roleServiceImpl"></property>
+		<property name="privilegeService" ref="privilegeServiceImpl"></property>
+	</bean>
+	<bean id="adminDailyVinAction" class="com.hhit.action.AdminDailyVinAction" scope="prototype">
+		<property name="adDailyVinService" ref="adminDailyVinServiceImpl"></property>
+	</bean>
+
+</beans>

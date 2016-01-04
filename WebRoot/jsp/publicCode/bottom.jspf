@@ -1,0 +1,43 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<!-- 页尾，版权信息开始 -->
+<br />
+
+<div id="footer">
+	<div class="footer_top">
+		<div class="middle">
+			<div class="footer_top_link">
+				<h3>友情链接：</h3>
+				<div class="footer_top_link_area">
+					<a target="_blank" href="http://www.zxgjlove.com/">心灵驿站</a> <a
+						target="_blank" href="http://www.bxxh.net/">爆笑笑话网</a>
+				</div>
+			</div>
+		</div>
+		<div class="footer_top_about">
+			<h3>关于我们：</h3>
+        		<ul class="footer_top_about_area">
+        			<span><span><a href="disclaimer.jsp" target="_blank">注册条款</a>
+        			<a href="privacy.jsp" target="_blank">用户隐私</a></span></span>
+     			</ul>
+     	</div>
+			<div class="footer_top_care"><h3>关注我们：</h3>
+    			<ul class="footer_top_care_area">
+    				<span><span><a href="contact.jsp" target="_blank">联系我们</a>
+    				<a href="express.jsp" target="_blank">表白说明</a>
+                	<a href="level.jsp" target="_blank">用户等级说明</a>
+                	<a href="romantic.jsp" target="_blank">浪漫专区说明</a></span></span>
+    			</ul> 
+        	</div>
+	</div>
+</div>
+<!-- 页尾，版权信息结束 -->
+<div class="container">
+	<div class="row">
+		<div class="col-md-5"></div>
+		<div class="col-md-4" style="height:30px;">
+		&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&copy;2015&nbsp;&nbsp;&nbsp;BraveToLove</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+

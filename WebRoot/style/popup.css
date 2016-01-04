@@ -1,0 +1,12 @@
+@charset "utf-8";
+/*------- Prompt Style -------*/
+.popup_prompt{border:1px solid #909090;background:#FFF;}
+.popup_prompt .popup_header{}
+.popup_prompt h1{height:25px;margin:1px;font-size:13px;color:#F4793A;font-weight:bold;text-indent:10px;padding-top:7px;}
+.popup_prompt .popup_content{margin:1px;padding:10px;font-size:13px;}
+.popup_prompt .buttonRow{height:30px;line-height:30px;text-align:right;margin:1px;}
+.popup_prompt input{color:#555;border:1px solid #808080;margin-right:5px;height:20px;line-height:18px;padding:0px 3px;}
+/*------- Tip Style -------*/
+.popup_tip{border:0px #684E02 solid;vertical-align:middle;filter:Alpha(Opacity=80);-moz-opacity:0.8;}
+.popup_tip .popup_content{color:#000;background:#a6fea6;text-align:center;}
+.popup_tip img{vertical-align:middle;}
