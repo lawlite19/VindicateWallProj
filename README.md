@@ -1,4 +1,4 @@
-#表白墙系统：
+﻿#表白墙系统：
 	网站使用Struts+Spring+Hibernate框架，后台使用MySql数据库。
 	前台主要功能包括：
 		浏览网站上的表白信息
@@ -20,4 +20,4 @@
 		系统消息管理
 		密码修改等功能。
 		拥有超级管理员的用户可以对后台用户进行管理。
-	域名地址：www.bravetolove.com
+	域名地址：http://www.bravetolove.com
