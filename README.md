@@ -26,4 +26,4 @@
 		3、将项目文件放到Tomcat服务器下的webapps文件夹下，修改WEB-INF文件夹下classes文件加下的jdbc.properties文件内容，修改其			   连接字符串、用户名和密码。
 		4、启动Tomcat在浏览器中访问即可。
 		PS：用MyEclipse打开项目部署时，会有两个包冲突，antlr-2.7.2.jar和antlr-2.7.6.jar，删掉第一个即可。
-	访问地址：http://115.28.7.156/
+
